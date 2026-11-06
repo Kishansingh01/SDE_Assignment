@@ -1,0 +1,5 @@
+Scenario: public_03_load (1 simulated day)
+Total events ingested: 840,012
+Total wall-clock time: 214.34 seconds (3.57 minutes)
+Ingest Throughput: 3,919 events/second
+Peak Memory: 165.03 MB

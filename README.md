@@ -176,3 +176,50 @@ thing you cut.
 - If something is ambiguous, **state your assumption in `SUBMISSION.md` and proceed**. Don't wait for an
   answer. Questions are welcome but won't block you.
 - Don't share the assignment or your solution publicly.
+
+---
+
+## 11. Controller Quickstart & Operating Guide
+
+### Architecture Overview
+The controller is an autonomous service communicating with the simulator exclusively over HTTP:
+- **`controller/ingest.py`**: Stream-parses NDJSON event chunks, aggregates call and DID health stats, and persists sync bookmarks in SQLite WAL mode.
+- **`controller/stats.py`**: Two-proportion z-tests, statistical power and sample size gating ($N \ge 250$), and guardrail validation ($\Delta \le 0.02$).
+- **`controller/governance.py`**: TV distance computation, auto-apply policy checks, dry-run generation, and proposal formatting.
+- **`controller/incidents.py`**: Rapid hallucination spike detection ($> 2.5\%$), LLM suggestion retrieval, $N=400$ safety validation ($pass\_rate \ge 0.97$), and caller-ID spam degradation auto-rotation.
+- **`controller/experiments.py`**: Cohort variant exploration/exploitation, Bonferroni-corrected winner promotion, and permanent quarantine for decayed variants.
+- **`controller/scheduler.py`**: Returning lead pickup preference tracking ($6\times$ weight multiplier).
+- **`controller/audit.py`**: Queryable SQLite audit trail and consolidated supervisor dashboard.
+
+### Execution
+Start the controller against any running simulator instance:
+```bash
+# Via run.sh
+./run.sh http://127.0.0.1:8700
+
+# Or directly with Python
+python -m controller.loop --url http://127.0.0.1:8700 --db controller.db
+```
+
+### Running Tests and Benchmarks
+```bash
+# Run complete unit test suite
+python -m pytest -v tests
+
+# Run crash-recovery demonstration
+python tests/crash_recovery_demo.py
+
+# Run load-test benchmark on public_03_load (1 simulated day)
+python tests/load_test.py
+```
+
+### Audit & Debugging Queries
+Inspect what changes occurred, who approved them, and why:
+```bash
+# View recent decisions for a workflow
+python -m controller.audit --db controller.db --workflow ks_cancel --limit 10
+
+# Consolidated supervisor dashboard view
+python -m controller.audit --db controller.db --supervisor-view
+```
+
