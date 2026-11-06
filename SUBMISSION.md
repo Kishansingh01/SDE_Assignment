@@ -357,3 +357,4 @@ From `reports/public_02.md`:
 4. **Gradual Autonomy Rollout**: Enable caller-ID auto-apply on low-risk workflows first; observe stability for 72 hours before enabling variant auto-apply.
 5. **Circuit Breakers & Runbooks**: Establish hard circuit breakers that freeze all automated changes if platform-wide error rates exceed 1%.
 6. **Auditor Self-Serve Portal**: Expose the audit CLI as an internal secure query endpoint for compliance and IRDAI reporting.
+
